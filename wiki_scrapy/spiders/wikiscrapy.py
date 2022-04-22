@@ -1,3 +1,4 @@
+import scrapy
 import w3lib.html
 import re
 
@@ -7,17 +8,17 @@ class WikiscrapySpider(scrapy.Spider):
     start_urls = ['https://en.wikipedia.org/wiki/Python_(programming_language)']
 
     def parse(self, response):
-        caption = response.css('caption.infobox-title::text').get()
-        tables = response.css('table.infobox tr')
+        caption = response.xpath("//caption[contains(@class,'infobox-title')]/text()").get()
+        tables = response.xpath("//table[contains(@class,'infobox')]//tr")
         data_value = {'caption' : caption}
         for table in tables:
             # label = ""
             # data = ""
-            info_label_paragraph = table.css('th.infobox-label::text').get()
-            info_label_link = table.css('th.infobox-label a::text').get()
-            info_data = table.css('td.infobox-data').get()
-            info_header_link = table.css('th.infobox-header').get()
-            info_data_full = table.css('td.infobox-full-data').get()
+            info_label_paragraph = table.xpath(".//th[contains(@class,'infobox-label')]/text()").get()
+            info_label_link = table.xpath(".//th[contains(@class,'infobox-label')]//a/text()").get()
+            info_data = table.xpath(".//td[contains(@class,'infobox-data')]").get()
+            info_header_link = table.xpath(".//th[contains(@class,'infobox-header')]").get()
+            info_data_full = table.xpath(".//td[contains(@class,'infobox-full-data')]").get()
             if info_label_link is not None:
                 info_label_link = re.sub(r'\s+', ' ', info_label_link)
                 label = info_label_link
@@ -70,6 +71,9 @@ class WikiscrapySpider(scrapy.Spider):
             #              data = link('a::text').get() + ", "
             if data != "":
                 data_value[label] = data
+            # yield{
+            #     label : data
+            # }
         i = 0
         short_desc = ""
         while i < 3:
