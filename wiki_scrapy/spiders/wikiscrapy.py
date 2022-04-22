@@ -72,8 +72,8 @@ class WikiscrapySpider(scrapy.Spider):
             #          info_link = info.css('a')
             #          for link in info_link:
             #              data = link('a::text').get() + ", "
-            
-            data_value[label] = data
+            if data != "":
+                data_value[label] = data
         i = 0
         short_desc = ""
         while i < 3:
