@@ -1,4 +1,5 @@
 import scrapy
+from wiki_scrapy.items import WikiScrapyItem
 import w3lib.html
 import re
 
@@ -8,9 +9,10 @@ class WikiscrapySpider(scrapy.Spider):
     start_urls = ['https://en.wikipedia.org/wiki/Python_(programming_language)']
 
     def parse(self, response):
+        item = WikiScrapyItem()
         caption = response.xpath("//caption[contains(@class,'infobox-title')]/text()").get()
         tables = response.xpath("//table[contains(@class,'infobox')]//tr")
-        data_value = {'caption' : caption}
+        data_value = {}
         for table in tables:
             # label = ""
             # data = ""
@@ -84,5 +86,7 @@ class WikiscrapySpider(scrapy.Spider):
             short = short.replace('[', '')
             short_desc = short_desc + " " + short
             i += 1
-        data_value['short desc'] = short_desc
-        yield data_value
+        item['caption'] = caption
+        item['data'] = data_value
+        item['short_desc'] = short_desc
+        yield item

@@ -6,7 +6,10 @@
 import scrapy
 
 
+
 class WikiScrapyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    caption = scrapy.Field()
+    data = scrapy.Field()
+    short_desc = scrapy.Field()
