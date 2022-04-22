@@ -1,7 +1,3 @@
-from asyncio import shield
-from dataclasses import replace
-from textwrap import shorten
-import scrapy
 import w3lib.html
 import re
 
